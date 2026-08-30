@@ -1,0 +1,3 @@
+# Smart Reminder AI dependencies
+# For Phase 1, we use only standard built-in Python libraries.
+# External packages like pandas, matplotlib, scikit-learn, and streamlit will be added in later phases.
