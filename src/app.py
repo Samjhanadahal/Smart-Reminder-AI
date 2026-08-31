@@ -1,5 +1,6 @@
 import sys
 from models import Task
+import database
 
 def print_menu():
     """Prints the application menu options."""
@@ -13,13 +14,13 @@ def print_menu():
     print("5. Exit")
     print("=" * 40)
 
-def add_task_flow(tasks, next_id):
+def add_task_flow():
     """Guide the user through adding a task with validation."""
     print("\n--- Add a New Task ---")
     title = input("Enter task name: ").strip()
     if not title:
         print("Error: Task name cannot be empty.")
-        return next_id
+        return
         
     description = input("Enter description: ").strip()
     deadline_str = input("Enter deadline (YYYY-MM-DD): ").strip()
@@ -30,28 +31,36 @@ def add_task_flow(tasks, next_id):
         estimated_hours = float(estimated_hours_input)
     except ValueError:
         print("Error: Estimated hours must be a valid number.")
-        return next_id
+        return
 
     try:
-        # Create a new Task instance. Validation is handled inside __init__.
-        new_task = Task(
-            task_id=next_id,
+        # Validate task parameters by instantiating Task with dummy ID
+        # Validation logic is handled inside Task.__init__
+        dummy_task = Task(
+            task_id=0,
             title=title,
             description=description,
             deadline_str=deadline_str,
             priority=priority,
             estimated_hours=estimated_hours
         )
-        tasks.append(new_task)
-        print(f"\nSuccess: Task '{title}' added successfully with ID {next_id}!")
-        return next_id + 1
+        
+        # Save to SQLite
+        task_id = database.add_task(
+            title=dummy_task.title,
+            description=dummy_task.description,
+            deadline=dummy_task.deadline.isoformat(),
+            priority=dummy_task.priority,
+            estimated_hours=dummy_task.estimated_hours
+        )
+        print(f"\nSuccess: Task '{title}' added successfully with ID {task_id}!")
     except ValueError as e:
         print(f"\nError creating task: {e}")
-        return next_id
 
-def view_tasks_flow(tasks):
+def view_tasks_flow():
     """Display all tasks in the system."""
     print("\n--- All Tasks ---")
+    tasks = database.get_all_tasks()
     if not tasks:
         print("No tasks found. Try adding some!")
         return
@@ -61,9 +70,10 @@ def view_tasks_flow(tasks):
         print(task)
     print("-" * 40)
 
-def update_status_flow(tasks):
+def update_status_flow():
     """Update status of a specific task by ID."""
     print("\n--- Update Task Status ---")
+    tasks = database.get_all_tasks()
     if not tasks:
         print("No tasks available to update.")
         return
@@ -90,14 +100,18 @@ def update_status_flow(tasks):
     status_map = {"1": "Pending", "2": "In Progress", "3": "Completed"}
     if choice in status_map:
         new_status = status_map[choice]
-        task_to_update.update_status(new_status)
-        print(f"Success: Task {task_id} status updated to [{new_status}]!")
+        try:
+            database.update_task_status(task_id, new_status)
+            print(f"Success: Task {task_id} status updated to [{new_status}]!")
+        except ValueError as e:
+            print(f"Error: {e}")
     else:
         print("Error: Invalid choice.")
 
-def delete_task_flow(tasks):
+def delete_task_flow():
     """Delete a task by ID."""
     print("\n--- Delete a Task ---")
+    tasks = database.get_all_tasks()
     if not tasks:
         print("No tasks to delete.")
         return
@@ -108,31 +122,30 @@ def delete_task_flow(tasks):
         print("Error: ID must be a number.")
         return
 
-    # Find task index
-    for idx, task in enumerate(tasks):
-        if task.id == task_id:
-            deleted_task = tasks.pop(idx)
-            print(f"Success: Task ID {task_id} ('{deleted_task.title}') deleted.")
-            return
+    # Find the task
+    task_to_delete = next((t for t in tasks if t.id == task_id), None)
+    if not task_to_delete:
+        print(f"Error: Task with ID {task_id} not found.")
+        return
 
-    print(f"Error: Task with ID {task_id} not found.")
+    database.delete_task(task_id)
+    print(f"Success: Task ID {task_id} ('{task_to_delete.title}') deleted.")
 
 def main():
-    tasks = []
-    next_id = 1
+    database.init_db()
     
     while True:
         print_menu()
         choice = input("Select an option (1-5): ").strip()
         
         if choice == "1":
-            next_id = add_task_flow(tasks, next_id)
+            add_task_flow()
         elif choice == "2":
-            view_tasks_flow(tasks)
+            view_tasks_flow()
         elif choice == "3":
-            update_status_flow(tasks)
+            update_status_flow()
         elif choice == "4":
-            delete_task_flow(tasks)
+            delete_task_flow()
         elif choice == "5":
             print("\nThank you for using Smart Reminder AI. Goodbye!")
             sys.exit(0)
