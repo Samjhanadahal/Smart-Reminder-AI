@@ -1,0 +1,28 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLite Database local data
+data/*.db
+data/*.sqlite3
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+.env
+
+# Streamlit local credentials / cache
+.streamlit/
+
+# Temporary / Lock files
+~$*
+*.tmp
+*.log
+
+# IDE files
+.vscode/
+.idea/
+.DS_Store
