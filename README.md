@@ -1,216 +1,215 @@
 # ⚡ Smart Reminder AI
 
-An intelligent task and reminder application that combines **Object-Oriented Architecture**, **SQLite persistence**, **Matplotlib analytics**, **Scikit-learn Machine Learning**, and an interactive **Streamlit web dashboard** to transform productivity and task scheduling.
+<div align="center">
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
+[![CI Tests](https://img.shields.io/badge/Tests-33%20Passed-10b981?style=for-the-badge&logo=githubactions&logoColor=white)](tests/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+**An intelligent, machine-learning-augmented task management system featuring dynamic priority scoring, Scikit-learn completion risk prediction, Explainable AI (XAI) decision drivers, automated focus schedule optimization, and a modern Streamlit web dashboard.**
+
+[Key Features](#-key-highlights--features) • [System Architecture](#-system-architecture) • [ML Methodology](#-ai--machine-learning-methodology) • [Quick Start](#-quick-start) • [Running Tests](#-running-the-automated-test-suite)
+
+</div>
 
 ---
 
 ## 🌟 Key Highlights & Features
 
-### 1. 📋 Core Task & Data Management (Phases 1 & 2)
-* **Object-Oriented Design**: Clean `Task` domain model encapsulating validation, date arithmetic, status transitions, and priority weights.
-* **SQLite Persistence**: Reliable transactional storage with parameterized queries, schema auto-migration, status tracking, and sample data seeding.
+### 1. 🤖 Scikit-Learn Predictive Risk Engine (Phase 6)
+* **Probabilistic Feasibility Forecasting**: Evaluates whether a task will be delivered on time before a missed deadline occurs.
+* **Pre-Submission Live Intelligence**: Instant inference during task creation provides immediate feedback on workload feasibility and timeline risk.
+* **Trained Pipeline**: Built with a `StandardScaler` and `RandomForestClassifier` pipeline trained on non-linear productivity patterns.
 
-### 2. 🎯 Smart Dynamic Priority Scoring (Phase 3)
-* Calculates real-time composite scores (0–100) combining:
-  * **Base Priority Weight** (High = 30, Medium = 20, Low = 10)
-  * **Urgency & Proximity** (Progressive scale for overdue, due today, next 48h, and upcoming days)
-  * **Effort Intensity & Workload Pressure** (Ratio of required hours against remaining lead time)
-  * **Execution Momentum** (Continuity boost for in-progress tasks)
-* Dynamic priority bands: **Critical** (≥80), **High** (60–79), **Medium** (40–59), and **Low** (<40).
+### 2. 🧠 Explainable AI (XAI) & Actionable Advice (Phase 7)
+* **Transparent Decision Drivers**: Demystifies algorithmic scores by attributing urgency to deadline proximity, complexity ratios, and workload intensity.
+* **Proactive Coaching**: Generates targeted advice (e.g., breaking large items into sprint blocks, tackling quick wins early to build momentum).
+* **Automated Schedule Optimizer**: Partitions tasks into dedicated daily focus blocks (*Morning Deep Work*, *Pre-Noon Sprint*, *Afternoon Execution*, *Wrap-up*) constrained by the user's daily capacity.
 
-### 3. 🔔 Proactive Reminder Engine & Workload Overload Detection (Phase 4)
-* Categorizes pending tasks into actionable buckets: **Overdue**, **Due Today**, **Due Within 48 Hours**, and **Due This Week**.
-* **Burnout & Capacity Protection**: Monitors workload against daily capacity (e.g., 8h/day limit) and raises overload alerts with exact deficit metrics.
-* **Daily Digest**: Formatted ASCII / notification digest ready for CLI, push notifications, or morning summaries.
+### 3. 🎯 Multi-Factor Smart Priority Scoring (Phase 3)
+* Real-time composite scoring algorithm ($0 - 100$) evaluating:
+  * **Base Priority Weight**: High (30 pts), Medium (20 pts), Low (10 pts)
+  * **Urgency & Proximity**: Dynamic escalation for overdue tasks, due today, next 48h, and upcoming dates.
+  * **Effort & Workload Pressure**: Analyzes required hours against remaining lead time.
+  * **Status Continuity**: Momentum boost for in-progress tasks.
+* Automated categorization into priority bands: **Critical** ($\ge 80$), **High** ($60-79$), **Medium** ($40-59$), and **Low** ($<40$).
 
-### 4. 📊 Visual Analytics & Performance Reporting (Phase 5)
-* Computed productivity metrics: Completion Rate, Historical On-Time Delivery %, Total/Remaining Estimated Hours, and Average Task Duration.
-* Matplotlib charts styled with sleek dark themes:
-  * **Task Status Breakdown**: Donut chart with completion proportions.
-  * **Workload by Priority**: Horizontal bar chart comparing task count and hours across priorities.
-  * **Delivery Reliability Gauge**: Historical on-time vs. late delivery percentages.
+### 4. 🔔 Proactive Alerts & Overload Protection (Phase 4)
+* Classifies tasks into triage buckets: **Overdue**, **Due Today**, **Due in 48 Hours**, and **Due This Week**.
+* **Burnout Protection**: Detects when immediate commitments exceed daily limits (e.g., 8h/day) and computes exact hour deficits.
+* **Daily Digest**: Formatted digest suitable for terminal output or morning notifications.
 
-### 5. 🤖 Machine Learning On-Time Completion Predictor (Phase 6)
-* Built with **Scikit-learn `RandomForestClassifier`** and `StandardScaler` pipeline.
-* Evaluates non-linear feature interactions:
-  * Estimated hours
-  * Days remaining until deadline
-  * Priority weights
-  * Urgency ratio (workload vs. available daily hours)
-  * In-progress momentum status
-* **Live Pre-Submission Intelligence**: Predicts on-time feasibility and risk tiers (*Low Risk*, *Moderate Risk*, *High Risk*) before saving a task.
+### 5. 📊 Interactive Visual Analytics (Phase 5)
+* Computes real-time KPIs: Completion Rate, Historical On-Time Delivery %, Workload Backlog, and Average Task Duration.
+* Matplotlib charts with custom dark glassmorphism styling:
+  * **Donut Chart**: Task status distribution.
+  * **Horizontal Bar Chart**: Workload breakdown and hours across priorities.
+  * **Reliability Gauge**: Historical on-time delivery percentages.
 
-### 6. 🧠 Explainable AI (XAI) & Daily Schedule Optimizer (Phase 7)
-* **Explainable AI (XAI)**: Demystifies priority rankings by highlighting specific drivers (deadline urgency, complexity warnings, quick wins) along with tailored coaching tips.
-* **Focus Schedule Generator**: Organizes daily tasks into dedicated focus slots (e.g., *Morning Deep Work*, *Pre-Noon Sprint*, *Afternoon Execution*, *Wrap-up & Review*) while respecting custom daily hour budgets.
-
-### 7. 🚀 Dual Interfaces: Streamlit Web Dashboard & CLI Master Menu (Phase 8)
-* **Streamlit Web Dashboard** (`src/dashboard.py`):
-  * Modern Dark Glassmorphism aesthetic with responsive metric KPI cards.
-  * 4 interactive tabs: *Smart Task Center*, *Add & AI Predict*, *Explainable AI & Daily Schedule*, and *Productivity Analytics*.
-  * Real-time filtering by status, priority, and AI smart ranking.
-* **Interactive CLI Master Menu** (`src/app.py`):
-  * Full 12-option terminal workflow for terminal enthusiasts.
+### 6. 🚀 Dual Interfaces: Web Dashboard & CLI (Phase 8)
+* **Streamlit Web Application** (`src/dashboard.py`): Full-featured dark glassmorphism UI with real-time filters, interactive forms, AI explainers, and live charts.
+* **Interactive CLI Menu** (`src/app.py`): 12-option terminal interface.
 
 ---
 
-## 🛠️ Tech Stack
+## 🏛️ System Architecture
 
-| Component | Technology | Description |
-| :--- | :--- | :--- |
-| **Language** | Python 3.11+ | Modern, strongly typed OOP code |
-| **Database** | SQLite 3 | Embedded zero-configuration SQL engine |
-| **Data & Analytics** | Pandas, Matplotlib | High-performance dataframes & publication-ready charts |
-| **Machine Learning** | Scikit-learn, NumPy | Random Forest ensemble classifier & numerical pipelines |
-| **Web Interface** | Streamlit | Reactive dark-mode web application |
-| **Testing** | Unittest | 33 comprehensive automated test cases |
+```mermaid
+flowchart TD
+    User([User / Client]) -->|Interact| UI{Interface Layer}
+    
+    subgraph UI_Layer [Presentation Layer]
+        UI -->|Option 1| StreamlitApp["Streamlit Web Dashboard (dashboard.py)"]
+        UI -->|Option 2| CLIMenu["CLI Master Menu (app.py)"]
+    end
+    
+    subgraph Intelligence_Core [AI & Analytics Engine]
+        StreamlitApp & CLIMenu --> TaskModel["Domain Model (models.py)"]
+        TaskModel --> PriorityEngine["Smart Priority Scorer (smart_priority.py)"]
+        TaskModel --> ReminderEngine["Proactive Reminders (reminders.py)"]
+        TaskModel --> AnalyticsEngine["Analytics & Plots (analytics.py)"]
+        
+        TaskModel --> FeatureExtractor["Feature Engineering Pipeline"]
+        FeatureExtractor --> MLModel["Scikit-Learn Random Forest (ml_predictor.py)"]
+        
+        PriorityEngine & MLModel --> XAIEngine["Explainable AI & Optimizer (recommendations.py)"]
+    end
+    
+    subgraph Storage_Layer [Persistence Layer]
+        TaskModel <--> DB["SQLite Database (database.py)"]
+    end
+```
 
 ---
 
-## 📁 Project Structure
+## 🤖 AI & Machine Learning Methodology
+
+### 1. Problem Formulation
+Predicting task delivery risk is framed as a supervised binary classification problem with calibrated posterior probabilities:
+$$\hat{y} = P(\text{Completed On-Time} \mid \mathbf{x}) \in [0, 1]$$
+
+### 2. Feature Schema & Engineering
+Each task is mapped to a 5-dimensional numerical feature vector:
+
+| Feature | Type | Description | Rationale |
+| :--- | :--- | :--- | :--- |
+| `estimated_hours` | `float` | Estimated task completion effort | Captures scope size and execution burden |
+| `days_until_deadline` | `float` | Remaining calendar days to deadline | Establishes absolute timeline headroom |
+| `priority_weight` | `float` | Categorical encoding (High: 3, Med: 2, Low: 1) | Reflects organizational urgency |
+| `urgency_ratio` | `float` | $\frac{\text{estimated\_hours}}{\max(\text{days\_left} \times 6.0, 0.5)}$ | Non-linear proxy for daily capacity utilization |
+| `is_in_progress` | `binary` | $1$ if In Progress, $0$ if Pending | Captures execution momentum |
+
+### 3. Model Architecture & Pipeline
+* **Preprocessing**: `StandardScaler` ensures zero-mean, unit-variance normalization across differing scales.
+* **Classifier**: `RandomForestClassifier(n_estimators=120, max_depth=6, random_state=42)` captures non-linear interactions without overfitting.
+* **Risk Categorization**:
+  * **Low Risk**: $P(\text{On-Time}) \ge 75\%$
+  * **Moderate Risk**: $45\% \le P(\text{On-Time}) < 75\%$
+  * **High Risk**: $P(\text{On-Time}) < 45\%$
+
+---
+
+## 📁 Repository Structure
 
 ```
 Smart Reminder AI/
+├── .github/
+│   └── workflows/
+│       └── ci.yml             # GitHub Actions CI workflow (automated tests on push/PR)
 ├── data/
-│   └── tasks.db               # SQLite database (auto-created on first run)
+│   └── tasks.db               # SQLite database file
 ├── src/
-│   ├── __init__.py            # Package root & public module exports
-│   ├── app.py                 # CLI master menu & terminal application
-│   ├── dashboard.py           # Streamlit web dashboard (glassmorphism UI)
-│   ├── models.py              # OOP Task model and validation rules
-│   ├── database.py            # SQLite database access layer & seeding
-│   ├── smart_priority.py      # Smart Priority scoring algorithm (0-100)
-│   ├── reminders.py           # Reminder engine, alert categorization & digest
-│   ├── analytics.py           # Metrics calculation & Matplotlib dark charts
-│   ├── ml_predictor.py        # Scikit-learn Random Forest predictive pipeline
+│   ├── __init__.py            # Package exports
+│   ├── app.py                 # CLI master menu
+│   ├── dashboard.py           # Streamlit web application
+│   ├── models.py              # OOP Task domain model
+│   ├── database.py            # SQLite data access layer
+│   ├── smart_priority.py      # Dynamic Smart Priority scoring algorithm
+│   ├── reminders.py           # Reminder engine & overload detection
+│   ├── analytics.py           # Metrics calculation & Matplotlib charts
+│   ├── ml_predictor.py        # Scikit-learn Random Forest model
 │   └── recommendations.py     # Explainable AI & daily schedule optimizer
 ├── tests/
 │   ├── test_tasks.py          # Unit tests for Task model
-│   ├── test_database.py       # Unit tests for database CRUD operations
-│   ├── test_smart_priority.py # Unit tests for Smart Priority calculations
-│   ├── test_reminders.py      # Unit tests for reminder alert bucketing
-│   ├── test_analytics.py      # Unit tests for analytics & plot generators
-│   ├── test_ml_predictor.py   # Unit tests for ML feature extraction & models
-│   └── test_recommendations.py# Unit tests for XAI tips & schedule agenda
-├── requirements.txt           # Project dependencies
-├── .gitignore                 # Git ignore rules for Python, SQLite & cache
-└── README.md                  # Comprehensive project documentation
+│   ├── test_database.py       # Unit tests for database CRUD
+│   ├── test_smart_priority.py # Unit tests for Smart Priority
+│   ├── test_reminders.py      # Unit tests for reminders
+│   ├── test_analytics.py      # Unit tests for analytics
+│   ├── test_ml_predictor.py   # Unit tests for ML pipeline
+│   └── test_recommendations.py# Unit tests for XAI & schedule agenda
+├── .gitignore                 # Standard Python, SQLite & temp file ignore
+├── LICENSE                    # MIT License
+├── README.md                  # Project documentation
+└── requirements.txt           # Project dependencies
 ```
 
 ---
 
-## 🚀 Getting Started
+## ⚡ Quick Start
 
-### 1. Prerequisites
-Ensure you have **Python 3.11** (or 3.10+) installed on your machine.
-
-### 2. Clone the Repository
+### 1. Clone & Set Up Environment
 ```bash
 git clone https://github.com/Samjhanadahal/Smart-Reminder-AI.git
 cd "Smart Reminder AI"
-```
 
-### 3. Set Up a Virtual Environment (Recommended)
-```bash
-# Windows
+# Create and activate virtual environment
 python -m venv venv
-venv\Scripts\activate
 
+# Windows
+venv\Scripts\activate
 # macOS / Linux
-python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 4. Install Dependencies
+### 2. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## 💻 How to Run
-
-### Option A: Launch the Streamlit Web Dashboard (Recommended)
-Launch the web interface in your browser:
+### 3. Launch the Web Dashboard (Recommended)
 ```bash
-streamlit run src/dashboard.py
+python -m streamlit run src/dashboard.py
 ```
-> The dashboard will automatically open at `http://localhost:8501`. If your database is empty, click **"Load Realistic Sample Tasks"** to test features immediately!
+> The dashboard will launch at **`http://localhost:8501`**. Click **"Load Realistic Sample Tasks"** to test with pre-configured data.
 
-### Option B: Launch the Interactive CLI Master Menu
-For terminal-based task management:
+### 4. Or Launch the CLI Master Menu
 ```bash
 python src/app.py
-```
-
-```
-=======================================================
-         ⚡ SMART REMINDER AI - MASTER MENU
-=======================================================
- 1. Add a New Task (with AI Feasibility Forecast)
- 2. View All Tasks (Standard View)
- 3. View Smart Priority AI Ranked Tasks (Phase 3)
- 4. View Reminder Alerts & Daily Digest (Phase 4)
- 5. View Productivity Analytics Summary (Phase 5)
- 6. AI Completion Predictions & Explanations (Phase 6 & 7)
- 7. Generate Optimized Daily Work Schedule (Phase 7)
- 8. Update Task Status
- 9. Delete a Task
-10. Seed Realistic Sample Tasks (Demo Data)
-11. Launch Streamlit Web Dashboard (Phase 8)
-12. Exit
-=======================================================
 ```
 
 ---
 
 ## 🧪 Running the Automated Test Suite
 
-Run the full automated test suite containing **33 unit tests** across all 7 test suites:
+The project includes **33 comprehensive unit tests** across all modules:
 
 ```bash
 python -m unittest discover tests
 ```
 
-Expected output:
-```
+Output:
+```text
 .................................
 ----------------------------------------------------------------------
-Ran 33 tests in 0.480s
+Ran 33 tests in 0.451s
 
 OK
 ```
 
-You can also run specific test modules individually:
-```bash
-python -m unittest tests/test_tasks.py
-python -m unittest tests/test_smart_priority.py
-python -m unittest tests/test_ml_predictor.py
-python -m unittest tests/test_recommendations.py
-```
-
 ---
 
-## 🧠 Algorithmic Architecture
+## 💼 Technical Competencies Demonstrated (For Recruiters)
 
-### 1. Smart Priority Score Calculation
-$$\text{Score} = \text{PriorityWeight} + \text{UrgencyScore} + \text{EffortScore} + \text{StatusBonus}$$
-
-* **Priority Weight**: High = 30 pts, Medium = 20 pts, Low = 10 pts
-* **Urgency Score**: Overdue ($\ge 45\text{ pts} + 2 \times \text{days overdue}$), Due today ($42\text{ pts}$), $\le 3\text{ days}$ ($26\text{ pts}$), $\le 7\text{ days}$ ($16\text{ pts}$), $\le 14\text{ days}$ ($8\text{ pts}$)
-* **Effort & Workload**: Scaled by estimated hours with an additional penalty if high effort tasks have $\le 2$ days remaining.
-* **Status Bonus**: $+4\text{ pts}$ for in-progress tasks to encourage focus momentum.
-
-### 2. Scikit-learn Risk Prediction Model
-* **Model Type**: Random Forest Classifier with standard scaling pipeline (`StandardScaler` + `RandomForestClassifier(n_estimators=120, max_depth=6)`).
-* **Feature Schema**:
-  1. `estimated_hours` ($[0.5, 25]$)
-  2. `days_until_deadline` ($[-3, 25]$)
-  3. `priority_weight` ($1.0, 2.0, 3.0$)
-  4. `urgency_ratio` ($\frac{\text{estimated\_hours}}{\text{available\_working\_hours}}$)
-  5. `is_in_progress` ($0$ or $1$)
+* **Machine Learning Engineering**: Full lifecycle implementation (feature engineering, Scikit-learn pipeline, inference optimization, synthetic training data generation).
+* **Explainable AI (XAI)**: Attribution of model predictions to human-interpretable drivers and actionable recommendations.
+* **Production-Grade Python**: Clean OOP domain modeling, type hints, PEP8 compliance, and modular structure.
+* **Automated Testing & CI/CD**: 100% test coverage with 33 unit tests and a GitHub Actions workflow.
+* **Data Visualization & UX**: Publication-ready Matplotlib visual analytics and a modern Streamlit web dashboard.
 
 ---
 
 ## 📄 License
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
