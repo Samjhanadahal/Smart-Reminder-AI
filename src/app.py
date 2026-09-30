@@ -38,10 +38,11 @@ def print_menu():
     print(" 6. AI Completion Predictions & Explanations (Phase 6 & 7)")
     print(" 7. Generate Optimized Daily Work Schedule (Phase 7)")
     print(" 8. Update Task Status")
-    print(" 9. Delete a Task")
-    print("10. Seed Realistic Sample Tasks (Demo Data)")
-    print("11. Launch Streamlit Web Dashboard (Phase 8)")
-    print("12. Exit")
+    print(" 9. Edit Task Details (Title, Deadline, Priority, Effort)")
+    print("10. Delete a Task")
+    print("11. Seed Realistic Sample Tasks (Demo Data)")
+    print("12. Launch Streamlit Web Dashboard (Phase 8)")
+    print("13. Exit")
     print("=" * 55)
 
 def add_task_flow():
@@ -213,6 +214,71 @@ def update_status_flow():
     else:
         print("Error: Invalid choice.")
 
+def edit_task_flow():
+    """Guide the user through editing existing task details."""
+    print("\n--- ✏️ Edit Task Details ---")
+    tasks = database.get_all_tasks()
+    if not tasks:
+        print("No tasks available to edit.")
+        return
+
+    try:
+        task_id = int(input("Enter Task ID to edit: ").strip())
+    except ValueError:
+        print("Error: ID must be a number.")
+        return
+
+    task = next((t for t in tasks if t.id == task_id), None)
+    if not task:
+        print(f"Error: Task with ID {task_id} not found.")
+        return
+
+    print(f"\nEditing Task #{task.id}: {task.title}")
+    print("Press Enter to keep the current value shown in brackets [current].")
+
+    new_title = input(f"Enter title [{task.title}]: ").strip()
+    new_title = new_title if new_title else task.title
+
+    current_desc = task.description or ""
+    new_desc = input(f"Enter description [{current_desc}]: ").strip()
+    new_desc = new_desc if new_desc else current_desc
+
+    new_deadline = input(f"Enter deadline (YYYY-MM-DD) [{task.deadline}]: ").strip()
+    new_deadline = new_deadline if new_deadline else task.deadline.isoformat()
+
+    new_priority = input(f"Enter priority (High, Medium, Low) [{task.priority}]: ").strip()
+    new_priority = new_priority.capitalize() if new_priority else task.priority
+    if new_priority not in ["High", "Medium", "Low"]:
+        print("Error: Priority must be High, Medium, or Low.")
+        return
+
+    hours_input = input(f"Enter estimated hours [{task.estimated_hours}]: ").strip()
+    if hours_input:
+        try:
+            new_hours = float(hours_input)
+            if new_hours < 0:
+                print("Error: Estimated hours cannot be negative.")
+                return
+        except ValueError:
+            print("Error: Invalid number for hours.")
+            return
+    else:
+        new_hours = task.estimated_hours
+
+    try:
+        datetime.datetime.strptime(new_deadline, "%Y-%m-%d")
+        database.update_task(
+            task_id=task.id,
+            title=new_title,
+            description=new_desc,
+            deadline=new_deadline,
+            priority=new_priority,
+            estimated_hours=new_hours
+        )
+        print(f"\n✅ Success: Task #{task.id} updated successfully!")
+    except ValueError as e:
+        print(f"\n❌ Error updating task: {e}")
+
 def delete_task_flow():
     """Delete a task by ID."""
     print("\n--- Delete a Task ---")
@@ -258,7 +324,7 @@ def main():
     
     while True:
         print_menu()
-        choice = input("Select an option (1-12): ").strip()
+        choice = input("Select an option (1-13): ").strip()
         
         if choice == "1":
             add_task_flow()
@@ -277,16 +343,19 @@ def main():
         elif choice == "8":
             update_status_flow()
         elif choice == "9":
-            delete_task_flow()
+            edit_task_flow()
         elif choice == "10":
-            seed_sample_flow()
+            delete_task_flow()
         elif choice == "11":
-            launch_dashboard_flow()
+            seed_sample_flow()
         elif choice == "12":
+            launch_dashboard_flow()
+        elif choice == "13":
             print("\nThank you for using Smart Reminder AI. Goodbye!")
             sys.exit(0)
         else:
-            print("\nError: Invalid choice. Please enter a number between 1 and 12.")
+            print("\nError: Invalid choice. Please enter a number between 1 and 13.")
 
 if __name__ == "__main__":
     main()
+

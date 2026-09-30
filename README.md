@@ -6,7 +6,7 @@
 [![Scikit-Learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
 [![SQLite](https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)](https://www.sqlite.org/)
-[![CI Tests](https://img.shields.io/badge/Tests-33%20Passed-10b981?style=for-the-badge&logo=githubactions&logoColor=white)](tests/)
+[![CI Tests](https://img.shields.io/badge/Tests-35%20Passed-10b981?style=for-the-badge&logo=githubactions&logoColor=white)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 
 **An intelligent, machine-learning-augmented task management system featuring dynamic priority scoring, Scikit-learn completion risk prediction, Explainable AI (XAI) decision drivers, automated focus schedule optimization, and a modern Streamlit web dashboard.**
@@ -170,12 +170,14 @@ pip install -r requirements.txt
 ```
 
 ### 3. Launch the Web Dashboard (Recommended)
+You can launch either by double-clicking **`run_dashboard.bat`** (Windows) or running:
 ```bash
 python -m streamlit run src/dashboard.py
 ```
 > The dashboard will launch at **`http://localhost:8501`**. Click **"Load Realistic Sample Tasks"** to test with pre-configured data.
 
 ### 4. Or Launch the CLI Master Menu
+Double-click **`run_cli.bat`** (Windows) or run:
 ```bash
 python src/app.py
 ```
@@ -184,7 +186,7 @@ python src/app.py
 
 ## 🧪 Running the Automated Test Suite
 
-The project includes **33 comprehensive unit tests** across all modules:
+The project includes **35 comprehensive unit tests** across all modules:
 
 ```bash
 python -m unittest discover tests
@@ -192,9 +194,9 @@ python -m unittest discover tests
 
 Output:
 ```text
-.................................
+...................................
 ----------------------------------------------------------------------
-Ran 33 tests in 0.451s
+Ran 35 tests in 0.726s
 
 OK
 ```

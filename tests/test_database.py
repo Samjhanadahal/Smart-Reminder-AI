@@ -121,5 +121,51 @@ class TestDatabase(unittest.TestCase):
         success = database.delete_task(999, db_path=self.db_path)
         self.assertFalse(success)
 
+    def test_get_task_by_id(self):
+        task_id = database.add_task(
+            title="Fetch By ID Test",
+            description="Testing get_task_by_id",
+            deadline="2026-10-15",
+            priority="Medium",
+            estimated_hours=3.0,
+            db_path=self.db_path
+        )
+        task = database.get_task_by_id(task_id, db_path=self.db_path)
+        self.assertIsNotNone(task)
+        self.assertEqual(task.id, task_id)
+        self.assertEqual(task.title, "Fetch By ID Test")
+
+        # Non-existent task returns None
+        non_existent = database.get_task_by_id(9999, db_path=self.db_path)
+        self.assertIsNone(non_existent)
+
+    def test_update_task_details(self):
+        task_id = database.add_task(
+            title="Initial Title",
+            description="Initial Desc",
+            deadline="2026-10-01",
+            priority="Low",
+            estimated_hours=1.5,
+            db_path=self.db_path
+        )
+        updated = database.update_task(
+            task_id=task_id,
+            title="Updated Title",
+            description="Updated Desc",
+            deadline="2026-10-05",
+            priority="High",
+            estimated_hours=4.0,
+            db_path=self.db_path
+        )
+        self.assertTrue(updated)
+
+        task = database.get_task_by_id(task_id, db_path=self.db_path)
+        self.assertEqual(task.title, "Updated Title")
+        self.assertEqual(task.description, "Updated Desc")
+        self.assertEqual(task.deadline, datetime.date(2026, 10, 5))
+        self.assertEqual(task.priority, "High")
+        self.assertEqual(task.estimated_hours, 4.0)
+
 if __name__ == "__main__":
     unittest.main()
+

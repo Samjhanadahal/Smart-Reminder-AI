@@ -260,7 +260,9 @@ with tab_tasks:
     st.subheader("Task Management & Smart Prioritization")
     
     # Filter and Sort Controls
-    fcol1, fcol2, fcol3 = st.columns([2, 2, 2])
+    search_col, fcol1, fcol2, fcol3 = st.columns([3, 2, 2, 2])
+    with search_col:
+        search_query = st.text_input("🔍 Search Tasks", placeholder="Filter by title or keywords...").strip().lower()
     with fcol1:
         status_filter = st.selectbox("Filter Status", ["All Active", "All (Including Completed)", "Pending", "In Progress", "Completed"])
     with fcol2:
@@ -275,6 +277,9 @@ with tab_tasks:
 
     # Filter tasks
     filtered_tasks = list(tasks)
+    if search_query:
+        filtered_tasks = [t for t in filtered_tasks if search_query in t.title.lower() or (t.description and search_query in t.description.lower())]
+
     if status_filter == "All Active":
         filtered_tasks = [t for t in filtered_tasks if t.status != "Completed"]
     elif status_filter in ["Pending", "In Progress", "Completed"]:
@@ -347,7 +352,7 @@ with tab_tasks:
                 
                 with c_actions:
                     # Quick action buttons
-                    bcol1, bcol2, bcol3 = st.columns(3)
+                    bcol1, bcol2, bcol3, bcol4 = st.columns(4)
                     with bcol1:
                         if task.status != "Completed":
                             if st.button("✅ Done", key=f"done_{task.id}", help="Mark task Completed"):
@@ -363,9 +368,54 @@ with tab_tasks:
                                 database.update_task_status(task.id, "In Progress", DB_PATH)
                                 st.rerun()
                     with bcol3:
+                        edit_active = st.session_state.get(f"edit_{task.id}", False)
+                        btn_label = "✖️ Close" if edit_active else "✏️ Edit"
+                        if st.button(btn_label, key=f"edit_btn_{task.id}", help="Edit task details"):
+                            st.session_state[f"edit_{task.id}"] = not edit_active
+                            st.rerun()
+                    with bcol4:
                         if st.button("🗑️ Del", key=f"del_{task.id}", help="Delete task"):
                             database.delete_task(task.id, DB_PATH)
                             st.rerun()
+
+            # Inline Edit Form
+            if st.session_state.get(f"edit_{task.id}", False):
+                with st.expander(f"✏️ Edit Task Details — #{task.id} {task.title}", expanded=True):
+                    with st.form(f"edit_form_{task.id}"):
+                        e_col1, e_col2 = st.columns(2)
+                        with e_col1:
+                            new_title = st.text_input("Task Title *", value=task.title)
+                            new_desc = st.text_area("Description", value=task.description or "", height=80)
+                        with e_col2:
+                            new_deadline = st.date_input("Deadline *", value=task.deadline)
+                            p_options = ["High", "Medium", "Low"]
+                            p_idx = p_options.index(task.priority) if task.priority in p_options else 1
+                            new_priority = st.selectbox("Priority *", p_options, index=p_idx)
+                            new_hours = st.number_input("Estimated Hours *", min_value=0.25, max_value=80.0, value=float(task.estimated_hours), step=0.5)
+
+                        save_col, cancel_col = st.columns(2)
+                        with save_col:
+                            if st.form_submit_button("💾 Save Changes", type="primary", use_container_width=True):
+                                if not new_title.strip():
+                                    st.error("Error: Task title cannot be empty.")
+                                else:
+                                    database.update_task(
+                                        task_id=task.id,
+                                        title=new_title.strip(),
+                                        description=new_desc.strip(),
+                                        deadline=new_deadline.isoformat(),
+                                        priority=new_priority,
+                                        estimated_hours=new_hours,
+                                        db_path=DB_PATH
+                                    )
+                                    st.session_state[f"edit_{task.id}"] = False
+                                    st.success("Task updated successfully!")
+                                    st.rerun()
+                        with cancel_col:
+                            if st.form_submit_button("❌ Cancel", use_container_width=True):
+                                st.session_state[f"edit_{task.id}"] = False
+                                st.rerun()
+
 
 # ==========================================
 # TAB 2: ADD & AI PREDICT TASK
@@ -464,6 +514,33 @@ with tab_ai:
                     for tip in item["tips"]:
                         st.caption(f"💡 {tip}")
 
+        # Export schedule to Markdown
+        agenda_md_lines = [
+            f"# ⚡ Smart Reminder AI - Daily Work Agenda ({today.isoformat()})",
+            f"**Available Capacity:** {capacity_hours}h | **Allocated Effort:** {agenda['total_allocated_hours']}h",
+            f"**Summary:** {agenda['notes']}",
+            "",
+            "## Scheduled Work Blocks",
+        ]
+        for it in agenda["schedule"]:
+            ts = it["task"]
+            agenda_md_lines.append(f"### [{it['time_slot']}] {it['block_name']} ({it['hours']}h)")
+            agenda_md_lines.append(f"- **Task #{ts.id}:** {ts.title}")
+            agenda_md_lines.append(f"- **Smart Priority:** {it['smart_score']} ({it['smart_band']}) | **Deadline:** {ts.deadline}")
+            if it["tips"]:
+                for tp in it["tips"]:
+                    agenda_md_lines.append(f"  - {tp}")
+            agenda_md_lines.append("")
+        agenda_md_content = "\n".join(agenda_md_lines)
+        
+        st.download_button(
+            label="📥 Export Today's Work Agenda (.md)",
+            data=agenda_md_content,
+            file_name=f"work_agenda_{today.isoformat()}.md",
+            mime="text/markdown",
+            use_container_width=False
+        )
+
         st.markdown("---")
         st.markdown("### 🔍 Explainable AI: Priority Drivers & Deep Dive")
         st.markdown("Understand why the AI ranks your top critical items at the highest priority level.")
@@ -514,7 +591,16 @@ with tab_analytics:
         st.markdown("---")
         st.markdown("#### Complete Tasks Data Table")
         df_tasks = database.get_tasks_as_dataframe(DB_PATH)
+        csv_data = df_tasks.to_csv(index=False).encode('utf-8')
+        st.download_button(
+            label="📥 Download Tasks as CSV",
+            data=csv_data,
+            file_name=f"smart_reminder_tasks_{today.isoformat()}.csv",
+            mime="text/csv",
+            use_container_width=False
+        )
         st.dataframe(df_tasks, use_container_width=True)
+
 
 # --- Sidebar Controls ---
 with st.sidebar:
